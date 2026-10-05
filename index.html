@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آرشیو اسرار و وقایع تاریخی | Chronos Archive</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;700;900&display=swap');
+        
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #404040;
+        }
+
+        /* Ambient Glow & Blur Effects */
+        .glass-card {
+            background: rgba(18, 18, 18, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 70px rgba(255, 255, 255, 0.05);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #a3a3a3 50%, #525252 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Floating Background Symbol */
+        .bg-symbol-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            max-width: 650px;
+            height: 80vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+            filter: blur(35px);
+            animation: pulseSymbol 12s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseSymbol {
+            0% {
+                transform: translate(-50%, -50%) scale(0.95) rotate(-2deg);
+                opacity: 0.08;
+                filter: blur(40px);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.05) rotate(2deg);
+                opacity: 0.15;
+                filter: blur(25px);
+            }
+        }
+
+        /* Subtle Smooth Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Folder 3D hover effect */
+        .folder-card {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .folder-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .folder-icon {
+            transition: transform 0.4s ease;
+        }
+        .folder-card:hover .folder-icon {
+            transform: scale(1.1) rotate(-3deg);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen text-neutral-200">
+
+    <!-- Background Symbol Overlay -->
+    <div class="bg-symbol-container flex items-center justify-center">
+        <svg viewBox="0 0 200 300" class="w-full h-full stroke-white fill-none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Top Diamond Arrow -->
+            <path d="M 100 20 L 150 70 L 100 120 L 50 70 Z" />
+            <!-- Middle Cross -->
+            <path d="M 100 110 L 100 190" />
+            <path d="M 80 135 L 120 135" />
+            <!-- Side Dots -->
+            <circle cx="55" cy="150" r="8" fill="white" />
+            <circle cx="145" cy="150" r="8" fill="white" />
+            <!-- Bottom Chevron -->
+            <path d="M 50 180 L 100 280 L 150 180" />
+        </svg>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-black/40 border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5">
+                    <svg viewBox="0 0 200 300" class="w-5 h-5 stroke-white fill-none" stroke-width="12">
+                        <path d="M 100 20 L 150 70 L 100 120 L 50 70 Z" />
+                        <path d="M 100 110 L 100 190" />
+                        <path d="M 80 135 L 120 135" />
+                        <circle cx="55" cy="150" r="10" fill="white" />
+                        <circle cx="145" cy="150" r="10" fill="white" />
+                        <path d="M 50 180 L 100 280 L 150 180" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-widest text-white uppercase">آرشیو وقایع تاریخی</h1>
+                    <p class="text-xs text-neutral-500 tracking-wider">CHRONOS HISTORICAL ARCHIVE</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button id="adminAuthBtn" onclick="toggleAuthModal()" class="px-5 py-2.5 text-xs tracking-wider uppercase font-semibold text-neutral-300 hover:text-white border border-white/10 hover:border-white/40 rounded-full glass-card transition-all flex items-center gap-2">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                    <span id="authBtnText">ورود به پنل مدیریت</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <section class="relative z-10 pt-20 pb-16 px-6 text-center max-w-4xl mx-auto reveal">
+        <div class="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-neutral-400 text-xs mb-6 tracking-widest">
+            گنجینه اسناد و مدارک محرمانه تاریخی
+        </div>
+        <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight gold-gradient-text">
+            ثبت و روایت تاریخ در قالبی گران‌بها
+        </h2>
+        <p class="text-neutral-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-light">
+            مجموعه‌ای نایاب از اسناد، نوارهای صوتی، تصاویر تاریخی و روایات ثبت‌شده. برای مرور مدارک، پوشه زمان مورد نظر را انتخاب کنید.
+        </p>
+    </section>
+
+    <!-- Folders Grid Section -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 pb-32">
+        <div class="flex items-center justify-between mb-10 pb-4 border-b border-white/10 reveal">
+            <div class="flex items-center gap-3">
+                <i data-lucide="folder-archive" class="w-5 h-5 text-neutral-400"></i>
+                <h3 class="text-xl font-bold text-white">پوشه‌های تاریخی</h3>
+            </div>
+            <span id="folderCount" class="text-xs text-neutral-500">0 پوشه ثبت شده</span>
+        </div>
+
+        <!-- Folder List Container -->
+        <div id="foldersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Folders will be rendered dynamically -->
+        </div>
+    </main>
+
+    <!-- Folder Detail View Modal -->
+    <div id="folderDetailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-4 md:p-10 transition-all duration-500">
+        <div class="glass-card w-full max-w-5xl max-h-[90vh] rounded-3xl overflow-hidden flex flex-col border border-white/15">
+            <!-- Modal Header -->
+            <div class="p-6 md:p-8 border-b border-white/10 flex items-center justify-between bg-black/40">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-white/5 rounded-2xl border border-white/10 text-white">
+                        <i data-lucide="folder-open" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <span id="modalDateTag" class="text-xs text-neutral-400 font-mono tracking-widest">تاریخ: --/--/----</span>
+                        <h3 id="modalTitle" class="text-2xl font-extrabold text-white mt-1">عنوان پوشه</h3>
+                    </div>
+                </div>
+                <button onclick="closeFolderModal()" class="p-3 rounded-full border border-white/10 hover:border-white/30 text-neutral-400 hover:text-white transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 md:p-8 overflow-y-auto space-y-8 flex-1">
+                <!-- Description -->
+                <div>
+                    <h4 class="text-xs uppercase font-bold tracking-widest text-neutral-500 mb-3">توضیحات و شرح واقعه</h4>
+                    <p id="modalDescription" class="text-neutral-300 leading-relaxed font-light text-base bg-white/[0.02] p-5 rounded-2xl border border-white/5">
+                        متن شرح واقعه...
+                    </p>
+                </div>
+
+                <!-- Images & Media Section -->
+                <div id="modalMediaSection">
+                    <h4 class="text-xs uppercase font-bold tracking-widest text-neutral-500 mb-4">مدارک و تصاویر پیوست شده</h4>
+                    <div id="modalMediaGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Media items dynamically injected -->
+                    </div>
+                </div>
+
+                <!-- Audio Section -->
+                <div id="modalAudioSection" class="hidden">
+                    <h4 class="text-xs uppercase font-bold tracking-widest text-neutral-500 mb-3">صوت و نوارهای ضبط شده</h4>
+                    <div class="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-4">
+                        <i data-lucide="music" class="w-6 h-6 text-neutral-300"></i>
+                        <audio id="modalAudioPlayer" controls class="w-full h-10 outline-none"></audio>
+                    </div>
+                </div>
+
+                <!-- File Attachment Link -->
+                <div id="modalFileSection" class="hidden">
+                    <h4 class="text-xs uppercase font-bold tracking-widest text-neutral-500 mb-3">فایل سند اصلی</h4>
+                    <a id="modalFileDownload" href="#" download class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white text-sm font-medium transition">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>دانلود سند پیوست</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Authentication Modal -->
+    <div id="authModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-lg hidden flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-white/15 relative">
+            <button onclick="toggleAuthModal()" class="absolute top-6 left-6 text-neutral-500 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 mx-auto flex items-center justify-center mb-3">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">ورود به پنل مدیریت</h3>
+                <p class="text-xs text-neutral-400 mt-1">جهت ویرایش و ثبت وقایع کلید دسترسی را وارد کنید</p>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-2">رمز عبور مدیر</label>
+                    <input type="password" id="adminPassword" placeholder="••••••••" required class="w-full bg-white/5 border border-white/10 focus:border-white/40 rounded-xl px-4 py-3 text-white text-center tracking-widest text-lg outline-none transition">
+                </div>
+                <p id="authError" class="text-xs text-red-400 text-center hidden">رمز عبور اشتباه است!</p>
+                <button type="submit" class="w-full py-3.5 bg-white text-black font-bold text-sm rounded-xl hover:bg-neutral-200 transition">
+                    ورود به سیستم
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Add/Edit Event Modal -->
+    <div id="adminPanelModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl hidden flex items-center justify-center p-4 md:p-8">
+        <div class="glass-card w-full max-w-3xl max-h-[90vh] rounded-3xl overflow-hidden flex flex-col border border-white/20">
+            <!-- Header -->
+            <div class="p-6 border-b border-white/10 flex items-center justify-between bg-black/50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="file-plus-2" class="w-6 h-6 text-white"></i>
+                    <h3 class="text-xl font-bold text-white">ثبت سند و پوشه جدید</h3>
+                </div>
+                <button onclick="closeAdminPanel()" class="p-2 text-neutral-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="eventForm" onsubmit="saveEvent(event)" class="p-6 overflow-y-auto space-y-6 flex-1">
+                <input type="hidden" id="eventId">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-neutral-400 mb-2">عنوان پوشه / واقعه تاریخی *</label>
+                        <input type="text" id="eventTitle" required placeholder="مثلاً: کشف کتیبه شماره ۴" class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl px-4 py-3 text-white text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-neutral-400 mb-2">تاریخ واقعه *</label>
+                        <input type="text" id="eventDate" required placeholder="مثلاً: ۱۳۲۴/۰۵/۱۲ یا 1945 BCE" class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl px-4 py-3 text-white text-sm outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-2">شرح کامل واقعه *</label>
+                    <textarea id="eventDescription" rows="4" required placeholder="توضیحات و مدارک مربوط به این تاریخ..." class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl px-4 py-3 text-white text-sm outline-none resize-none"></textarea>
+                </div>
+
+                <!-- File Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs text-neutral-400 mb-2">تصویر (عکس سند)</label>
+                        <input type="file" id="eventImage" accept="image/*" class="w-full text-xs text-neutral-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:bg-white/10 file:text-white hover:file:bg-white/20">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-neutral-400 mb-2">فایل صوتی (آهنگ/صدا)</label>
+                        <input type="file" id="eventAudio" accept="audio/*" class="w-full text-xs text-neutral-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:bg-white/10 file:text-white hover:file:bg-white/20">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-neutral-400 mb-2">فایل پیوست (PDF/سند)</label>
+                        <input type="file" id="eventFile" class="w-full text-xs text-neutral-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:bg-white/10 file:text-white hover:file:bg-white/20">
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+                    <button type="button" onclick="closeAdminPanel()" class="px-6 py-3 rounded-xl border border-white/10 text-neutral-400 hover:text-white text-sm">انصراف</button>
+                    <button type="submit" class="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-neutral-200 text-sm">ذخیره پوشه</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // State Management
+        let isAdmin = false;
+        const ADMIN_PASS = "hash886";
+        let initialEvents = [
+            {
+                id: '1',
+                title: 'آغاز نگارش نسخه اولیه معاهده',
+                date: '۱۳۰4/۰۳/۱۵',
+                description: 'این پوشه شامل نخستین طرح معاهده تاریخی است که بین طرفین به امضا رسید. کلیه جزئیات مرتبط در این بخش بایگانی شده است.',
+                image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
+                audio: '',
+                file: ''
+            },
+            {
+                id: '2',
+                title: 'اسناد محرمانه کنفرانس سال ۱۹۴۳',
+                date: '۱۳۲۲/۰۹/۰۶',
+                description: 'مجموعه تصاویر و مکاتبات دیپلماتیک مربوط به کنفرانس تاریخی، که تا دهه‌ها غیرقابل انتشار بوده است.',
+                image: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&q=80&w=1000',
+                audio: '',
+                file: ''
+            }
+        ];
+
+        // Load data from LocalStorage or Set Defaults
+        function getEvents() {
+            const stored = localStorage.getItem('chronos_events');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            localStorage.setItem('chronos_events', JSON.stringify(initialEvents));
+            return initialEvents;
+        }
+
+        function saveEventsToStorage(events) {
+            localStorage.setItem('chronos_events', JSON.stringify(events));
+            renderFolders();
+        }
+
+        // Render Folder Cards
+        function renderFolders() {
+            const events = getEvents();
+            const container = document.getElementById('foldersContainer');
+            document.getElementById('folderCount').innerText = `${events.length} پوشه ثبت شده`;
+            
+            container.innerHTML = '';
+
+            if(events.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20 border border-dashed border-white/10 rounded-3xl">
+                        <i data-lucide="folder-x" class="w-12 h-12 text-neutral-600 mx-auto mb-3"></i>
+                        <p class="text-neutral-500">هیچ پوشه تاریخی ثبت نشده است.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            events.forEach((event, index) => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-3xl p-6 folder-card cursor-pointer border border-white/10 relative overflow-hidden group reveal active';
+                
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="folder-icon p-4 bg-white/5 rounded-2xl border border-white/10 text-white">
+                            <i data-lucide="folder" class="w-8 h-8"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neutral-500 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                            ${event.date}
+                        </span>
+                    </div>
+
+                    <h4 class="text-xl font-bold text-white mb-2 group-hover:text-neutral-200 transition">${event.title}</h4>
+                    <p class="text-xs text-neutral-400 line-clamp-2 font-light leading-relaxed mb-6">${event.description}</p>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                        <span class="text-xs text-neutral-300 font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            مشاهده اسناد <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                        </span>
+
+                        ${isAdmin ? `
+                            <div class="flex items-center gap-2 z-20" onclick="event.stopPropagation()">
+                                <button onclick="deleteEvent('${event.id}')" class="p-2 text-neutral-500 hover:text-red-400 transition">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                card.addEventListener('click', () => openFolderModal(event));
+                container.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Open Detail Modal
+        function openFolderModal(event) {
+            document.getElementById('modalTitle').innerText = event.title;
+            document.getElementById('modalDateTag').innerText = `تاریخ: ${event.date}`;
+            document.getElementById('modalDescription').innerText = event.description;
+
+            // Handle Media Grid
+            const mediaGrid = document.getElementById('modalMediaGrid');
+            mediaGrid.innerHTML = '';
+            if (event.image) {
+                mediaGrid.innerHTML = `
+                    <div class="rounded-2xl overflow-hidden border border-white/10 max-h-80">
+                        <img src="${event.image}" alt="مدرک تصویری" class="w-full h-full object-cover">
+                    </div>
+                `;
+            } else {
+                mediaGrid.innerHTML = `<p class="text-xs text-neutral-600">تصویری برای این سند ثبت نشده است.</p>`;
+            }
+
+            // Audio Player
+            const audioSection = document.getElementById('modalAudioSection');
+            const audioPlayer = document.getElementById('modalAudioPlayer');
+            if (event.audio) {
+                audioPlayer.src = event.audio;
+                audioSection.classList.remove('hidden');
+            } else {
+                audioSection.classList.add('hidden');
+            }
+
+            // Attachments
+            const fileSection = document.getElementById('modalFileSection');
+            const fileDownload = document.getElementById('modalFileDownload');
+            if (event.file) {
+                fileDownload.href = event.file;
+                fileSection.classList.remove('hidden');
+            } else {
+                fileSection.classList.add('hidden');
+            }
+
+            document.getElementById('folderDetailModal').classList.remove('hidden');
+        }
+
+        function closeFolderModal() {
+            document.getElementById('folderDetailModal').classList.add('hidden');
+            document.getElementById('modalAudioPlayer').pause();
+        }
+
+        // Admin Auth Modal
+        function toggleAuthModal() {
+            if (isAdmin) {
+                // Open Admin Add Event Panel directly if already logged in
+                openAdminPanel();
+            } else {
+                document.getElementById('authModal').classList.toggle('hidden');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === ADMIN_PASS) {
+                isAdmin = true;
+                document.getElementById('authError').classList.add('hidden');
+                document.getElementById('authModal').classList.add('hidden');
+                document.getElementById('authBtnText').innerText = 'افزودن سند جدید';
+                renderFolders();
+                openAdminPanel();
+            } else {
+                document.getElementById('authError').classList.remove('hidden');
+            }
+        }
+
+        // Admin Form & Actions
+        function openAdminPanel() {
+            document.getElementById('eventForm').reset();
+            document.getElementById('eventId').value = '';
+            document.getElementById('adminPanelModal').classList.remove('hidden');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanelModal').classList.add('hidden');
+        }
+
+        // Helper to convert File to Base64
+        const fileToBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function saveEvent(e) {
+            e.preventDefault();
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const description = document.getElementById('eventDescription').value;
+
+            const imgFile = document.getElementById('eventImage').files[0];
+            const audioFile = document.getElementById('eventAudio').files[0];
+            const docFile = document.getElementById('eventFile').files[0];
+
+            let imageBase64 = imgFile ? await fileToBase64(imgFile) : '';
+            let audioBase64 = audioFile ? await fileToBase64(audioFile) : '';
+            let docBase64 = docFile ? await fileToBase64(docFile) : '';
+
+            const events = getEvents();
+            const newEvent = {
+                id: Date.now().toString(),
+                title,
+                date,
+                description,
+                image: imageBase64,
+                audio: audioBase64,
+                file: docBase64
+            };
+
+            events.unshift(newEvent);
+            saveEventsToStorage(events);
+            closeAdminPanel();
+        }
+
+        function deleteEvent(id) {
+            if (confirm('آیا از حذف این پوشه مطمئن هستید؟')) {
+                let events = getEvents();
+                events = events.filter(e => e.id !== id);
+                saveEventsToStorage(events);
+            }
+        }
+
+        // Scroll Animations
+        window.addEventListener('scroll', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 80) {
+                    el.classList.add('active');
+                }
+            });
+        });
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFolders();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
